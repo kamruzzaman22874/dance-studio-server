@@ -156,7 +156,7 @@ async function run() {
             const filter = { _id: new ObjectId(id) };
             const updateDoc = {
                 $set: {
-                    status: 'deny',
+                    status: 'denied',
                 },
             };
             const result = await classesCollection.updateOne(filter, updateDoc);
