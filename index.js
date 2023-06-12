@@ -215,19 +215,19 @@ async function run() {
 
     // payment method //
 
-    // app.post('/create-payment-intent', verifyJWT, async (req, res) => {
-    //   const { price } = req.body;
-    //   const amount = parseInt(price * 100);
-    //   const paymentIntent = await stripe.paymentIntents.create({
-    //     amount: amount,
-    //     currency: 'usd',
-    //     payment_method_types: ['card']
-    //   });
+    app.post('/create-payment-intent', verifyJWT, async (req, res) => {
+      const { price } = req.body;
+      const amount = parseInt(price * 100);
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: amount,
+        currency: 'usd',
+        payment_method_types: ['card']
+      });
 
-    //   res.send({
-    //     clientSecret: paymentIntent.client_secret
-    //   })
-    // })
+      res.send({
+        clientSecret: paymentIntent.client_secret
+      })
+    })
 
     app.post('/payments', async (req, res) => {
       const payment = req.body;
@@ -241,22 +241,7 @@ async function run() {
 
 
   
-
-    // app.get("/admin-stats", verifyJWT, verifyAdmin, async (req, res) => {
-    //   const users = await usersCollection.estimatedDocumentCount();
-    //   const products = await menuCollection.estimatedDocumentCount();
-    //   const orders = await paymentCollection.estimatedDocumentCount();
-
-    //   const payments = await paymentCollection.find().toArray();
-    //   const revenue = payments.reduce((sum, payment) => sum + payment.price, 0);
-    //   res.send({
-    //     users,
-    //     products,
-    //     orders,
-    //     revenue,
-    //   });
-    // });
-    // student api
+  
     app.post("/selectedClassData", async (req, res) => {
       const user = req.body;
       const result = await selectClassCollection.insertOne(user);
