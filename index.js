@@ -229,6 +229,31 @@ async function run() {
       })
     })
 
+    app.post("/payments", verifyJWT, async (req, res) => {
+      const payment = req.body;
+      const insertedResult = await paymentCollection.insertOne(payment);
+
+      // delete the selected classes
+      const selectedClassIds = payment.selectedClassesId.map(
+        (id) => new ObjectId(id)
+      );
+      const query = { _id: { $in: selectedClassIds } };
+      const deletedResult = await selectClassCollection.deleteMany(query);
+
+      // Update the class documents
+      const classIds = payment.classesId.map((id) => new ObjectId(id));
+      const updateQuery = { _id: { $in: classIds } };
+      const updateOperation = {
+        $inc: { enrolledStudent: 1, availableSeat: -1 },
+      };
+      const updateResult = await classesCollection.updateMany(
+        updateQuery,
+        updateOperation
+      );
+
+      res.send({ insertedResult, deletedResult, updateResult });
+    });
+
     app.post('/payments', async (req, res) => {
       const payment = req.body;
       const insertResult = await paymentCollection.insertOne(payment);
@@ -243,10 +268,12 @@ async function run() {
       const result = await selectClassCollection.insertOne(user);
       res.send(result);
     });
+
+   
      
     app.get("/selectedClass/:email", async (req, res) => {
           const email = req.params.email;
-          const query = { userEmail: email };
+          const query = { instructorEmail: email };
           const result = await selectClassCollection.find(query).toArray();
           res.send(result);
         });
