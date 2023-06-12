@@ -229,11 +229,11 @@ async function run() {
       })
     })
 
-    // app.post('/payments', async (req, res) => {
-    //   const payment = req.body;
-    //   const insertResult = await paymentCollection.insertOne(payment);
-    //   res.send({ insertResult });
-    // })
+    app.post('/payments', async (req, res) => {
+      const payment = req.body;
+      const insertResult = await paymentCollection.insertOne(payment);
+      res.send({ insertResult });
+    })
 
 
   
